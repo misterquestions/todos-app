@@ -41,6 +41,9 @@ const todoReducer: React.Reducer<TodoState, TodoAction> = (state, action) => {
       return {
         ...state,
         createdTodos,
+        filteredTasks: createdTodos.filter((x) =>
+          dayjs(x.createdAt).isSame(state.filterDate, 'day'),
+        ),
       };
     }
 
