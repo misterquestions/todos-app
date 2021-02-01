@@ -51,7 +51,6 @@ const todoReducer: React.Reducer<TodoState, TodoAction> = (state, action) => {
         ...affectedTodo,
         completed: action.completed,
       });
-      const 
 
       return {
         ...state,
