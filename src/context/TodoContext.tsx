@@ -51,10 +51,14 @@ const todoReducer: React.Reducer<TodoState, TodoAction> = (state, action) => {
         ...affectedTodo,
         completed: action.completed,
       });
+      const 
 
       return {
         ...state,
         createdTodos,
+        filteredTasks: createdTodos.filter((x) =>
+          dayjs(x.createdAt).isSame(state.filterDate, 'day'),
+        ),
       };
     }
 
