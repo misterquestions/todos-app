@@ -53,14 +53,18 @@ const useStyles = makeStyles((theme) =>
 const TaskListContainer: React.FC = () => {
   const classes = useStyles();
   const {
-    state: { createdTodos },
+    state: { filteredTasks },
+    dispatch,
   } = React.useContext(TodoContext);
   const [editingTask, setEditingTask] = React.useState(-1);
   const [selectedDate, setSelectedDate] = React.useState(dayjs());
   const [taskCreationVisible, setTaskCreationVisible] = React.useState(false);
 
   const handleDateChange = (date: dayjs.Dayjs | null) => {
-    if (date) setSelectedDate(date);
+    if (date) {
+      setSelectedDate(date);
+      dispatch({ event: 'setFilterDate', date });
+    }
   };
 
   return (
@@ -124,7 +128,7 @@ const TaskListContainer: React.FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {createdTodos.map((todo, taskId) => (
+            {filteredTasks.map((todo, taskId) => (
               <TableRow key={todo.title} onClick={() => setEditingTask(taskId)}>
                 <TableCell>
                   <Checkbox
@@ -144,7 +148,7 @@ const TaskListContainer: React.FC = () => {
               </TableRow>
             ))}
           </TableBody>
-          {createdTodos.length === 0 && (
+          {filteredTasks.length === 0 && (
             <TableFooter>
               <Typography className={classes.emptyTable}>
                 There&apos;s no data yet!

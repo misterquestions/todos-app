@@ -1,4 +1,5 @@
 import React from 'react';
+import dayjs from 'dayjs';
 
 interface Todo {
   title: string;
@@ -9,6 +10,8 @@ interface Todo {
 
 interface TodoState {
   createdTodos: Array<Todo>;
+  filterDate: dayjs.Dayjs;
+  filteredTasks: Array<Todo>;
 }
 
 interface TodoContextProps {
@@ -19,12 +22,15 @@ interface TodoContextProps {
 type TodoAction =
   | { event: 'addTask'; todo: Todo }
   | { event: 'changeTaskStatus'; taskId: number; completed: boolean }
-  | { event: 'deleteTask'; taskId: number };
+  | { event: 'deleteTask'; taskId: number }
+  | { event: 'setFilterDate'; date: dayjs.Dayjs }
+  | { event: 'filterTasks' };
 
 const todoReducer: React.Reducer<TodoState, TodoAction> = (state, action) => {
   switch (action.event) {
     case 'addTask':
       return {
+        ...state,
         createdTodos: [...state.createdTodos, action.todo],
       };
 
@@ -33,6 +39,7 @@ const todoReducer: React.Reducer<TodoState, TodoAction> = (state, action) => {
       createdTodos.splice(action.taskId, 1);
 
       return {
+        ...state,
         createdTodos,
       };
     }
@@ -46,9 +53,27 @@ const todoReducer: React.Reducer<TodoState, TodoAction> = (state, action) => {
       });
 
       return {
+        ...state,
         createdTodos,
       };
     }
+
+    case 'setFilterDate':
+      return {
+        ...state,
+        filterDate: action.date,
+        filteredTasks: state.createdTodos.filter((x) =>
+          dayjs(x.createdAt).isSame(action.date, 'day'),
+        ),
+      };
+
+    case 'filterTasks':
+      return {
+        ...state,
+        filteredTasks: state.createdTodos.filter((x) =>
+          dayjs(x.createdAt).isSame(state.filterDate, 'day'),
+        ),
+      };
 
     default:
       return state;
@@ -56,20 +81,9 @@ const todoReducer: React.Reducer<TodoState, TodoAction> = (state, action) => {
 };
 
 const initialState: TodoState = {
-  createdTodos: [
-    {
-      completed: false,
-      createdAt: new Date(),
-      title: 'Buy Milk',
-      description: 'Go to the tiendita and buy milk',
-    },
-    {
-      completed: true,
-      createdAt: new Date(),
-      title: 'Programming Season',
-      description: 'Make my daily programming season at 3:30 PM',
-    },
-  ],
+  createdTodos: [],
+  filterDate: dayjs(),
+  filteredTasks: [],
 };
 
 export const TodoContext = React.createContext<TodoContextProps>({

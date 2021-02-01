@@ -56,6 +56,7 @@ const NewTaskContainer: React.FC<NewTaskContainerProps> = ({ onClose }) => {
         description: description || '',
       },
     });
+    dispatch({ event: 'filterTasks' });
     onClose();
   };
 
