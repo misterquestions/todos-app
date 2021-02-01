@@ -1,3 +1,4 @@
+$font-name: "Averta";
 $font-types: (
   "regular": 400,
   "semibold": 600,
@@ -14,7 +15,7 @@ $font-types: (
   @font-face {
     font-family: "Averta";
     src: url("../assets/fonts/#{$type}.eot");
-    src: local("Averta Bold"), local("Averta-#{capitalize($type)}"),
+    src: local("Averta Bold"), local("#{$font-name}-#{capitalize($type)}"),
       url("../assets/fonts/#{$type}.eot?#iefix") format("embedded-opentype"),
       url("../assets/fonts/#{$type}.woff2") format("woff2"),
       url("../assets/fonts/#{$type}.woff") format("woff");
