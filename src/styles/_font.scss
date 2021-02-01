@@ -1,0 +1,24 @@
+$font-types: (
+  "regular": 400,
+  "semibold": 600,
+  "bold": 700,
+  "extrabold": 800,
+  "black": 900,
+);
+
+@function capitalize($string) {
+  @return to-upper-case(str-slice($string, 1, 1)) + str-slice($string, 2);
+}
+
+@each $type, $weight in $font-types {
+  @font-face {
+    font-family: "Averta";
+    src: url("../assets/fonts/#{$type}.eot");
+    src: local("Averta Bold"), local("Averta-#{capitalize($type)}"),
+      url("../assets/fonts/#{$type}.eot?#iefix") format("embedded-opentype"),
+      url("../assets/fonts/#{$type}.woff2") format("woff2"),
+      url("../assets/fonts/#{$type}.woff") format("woff");
+    font-weight: $weight;
+    font-style: normal;
+  }
+}
