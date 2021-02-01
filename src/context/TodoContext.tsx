@@ -17,22 +17,32 @@ interface TodoContextProps {
 }
 
 type TodoAction =
-  | { event: 'addTodo'; todo: Todo }
-  | { event: 'toggleCompleted'; todoId: number };
+  | { event: 'addTask'; todo: Todo }
+  | { event: 'changeTaskStatus'; taskId: number; completed: boolean }
+  | { event: 'deleteTask'; taskId: number };
 
 const todoReducer: React.Reducer<TodoState, TodoAction> = (state, action) => {
   switch (action.event) {
-    case 'addTodo':
+    case 'addTask':
       return {
         createdTodos: [...state.createdTodos, action.todo],
       };
 
-    case 'toggleCompleted': {
-      const affectedTodo = state.createdTodos[action.todoId];
+    case 'deleteTask': {
       const createdTodos = [...state.createdTodos];
-      createdTodos.splice(action.todoId, 1, {
+      createdTodos.splice(action.taskId, 1);
+
+      return {
+        createdTodos,
+      };
+    }
+
+    case 'changeTaskStatus': {
+      const affectedTodo = state.createdTodos[action.taskId];
+      const createdTodos = [...state.createdTodos];
+      createdTodos.splice(action.taskId, 1, {
         ...affectedTodo,
-        completed: !affectedTodo.completed,
+        completed: action.completed,
       });
 
       return {
